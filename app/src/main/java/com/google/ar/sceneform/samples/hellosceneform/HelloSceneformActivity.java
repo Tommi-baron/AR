@@ -28,14 +28,22 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
+import com.google.ar.core.Config;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
+import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.ArSceneView;
+import com.google.ar.sceneform.Camera;
+import com.google.ar.sceneform.HitTestResult;
+import com.google.ar.sceneform.Scene;
+import com.google.ar.sceneform.collision.Ray;
+import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -47,12 +55,11 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private static final String TAG = HelloSceneformActivity.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
 
-    private ArFragment arFragment;
+    private ArFragmentEx arFragment;
     private ModelRenderable andyRenderable;
 
-    private Button testButton;
-    private EditText xEdit, yEdit;
-
+    private TextView xText, yText, distanceText;
+    private AnchorNode anchorNode;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -66,20 +73,21 @@ public class HelloSceneformActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_ux);
-        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
-        testButton = (Button) findViewById(R.id.test_btn);
-        xEdit = (EditText)findViewById(R.id.x_edit);
-        yEdit = (EditText)findViewById(R.id.y_edit);
+        arFragment = (ArFragmentEx) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
+        xText = (TextView) findViewById(R.id.x_text);
+        yText = (TextView) findViewById(R.id.y_text);
+        distanceText = (TextView) findViewById(R.id.distance_text);
+
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
         ModelRenderable.builder()
-                .setSource(this, R.raw.arrow)
+                .setSource(this, R.raw.arrowlong)
                 .build()
                 .thenAccept(renderable -> andyRenderable = renderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast =
-                                    Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                    Toast.makeText(this, "Unable to load arrow renderable", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                             return null;
@@ -92,10 +100,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
                         return;
                     }
 
-                    Log.d(TAG, motionEvent.getAction() +" : "+
-                            motionEvent.getX() + ", "+motionEvent.getY());
-
-                    // Create the Anchor.
                     Anchor anchor = hitResult.createAnchor();
                     AnchorNode anchorNode = new AnchorNode(anchor);
                     anchorNode.setParent(arFragment.getArSceneView().getScene());
@@ -106,42 +110,8 @@ public class HelloSceneformActivity extends AppCompatActivity {
                     andy.setRenderable(andyRenderable);
                     andy.select();
                 });
-
-        arFragment.getArSceneView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d(TAG+" TouchListener", event.getAction() +" : "+
-                        event.getX() + ", "+event.getY());
-                return false;
-            }
-        });
-
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long downTime = SystemClock.uptimeMillis();
-                long eventTime = SystemClock.uptimeMillis();
-                int action = MotionEvent.ACTION_UP;
-                int x = Integer.valueOf(xEdit.getText().toString());
-                int y = Integer.valueOf(yEdit.getText().toString());
-                int metaState = 0;
-
-                // dispatch the event
-                MotionEvent event = MotionEvent.obtain(downTime, eventTime, action, x, y, metaState);
-                arFragment.getArSceneView().onTouchEvent(event);
-            }
-        });
-
     }
 
-    /**
-     * Returns false and displays an error message if Sceneform can not run, true if Sceneform can run
-     * on this device.
-     *
-     * <p>Sceneform requires Android N on the device as well as OpenGL 3.0 capabilities.
-     *
-     * <p>Finishes the activity if Sceneform can not run
-     */
     public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
         if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
             Log.e(TAG, "Sceneform requires Android N or later");
@@ -161,5 +131,16 @@ public class HelloSceneformActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public void onClickArScence(float x, float y) {
+        long downTime = SystemClock.uptimeMillis();
+        long eventTime = SystemClock.uptimeMillis();
+        int action = MotionEvent.ACTION_UP;
+        int metaState = 0;
+
+        // dispatch the event
+        MotionEvent event = MotionEvent.obtain(downTime, eventTime, action, x, y, metaState);
+        arFragment.getArSceneView().onTouchEvent(event);
     }
 }

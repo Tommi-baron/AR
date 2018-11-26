@@ -52,9 +52,9 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
+lintOptions {
+    abortOnError false
+}
 }
 
 dependencies {
@@ -78,12 +78,13 @@ sceneform.asset('sampledata/models/andy.obj',
         'sampledata/models/andy.sfa',
         'src/main/res/raw/andy')
 
+
 sceneform.asset('sampledata/models/arrow.obj',
         'default',
         'sampledata/models/arrow.sfa',
         'src/main/res/raw/arrow')
 
-sceneform.asset('sampledata/models/arrow_green.obj',
+sceneform.asset('sampledata/models/arrowlong.fbx',
         'default',
-        'sampledata/models/arrow_green.sfa',
-        'src/main/res/raw/arrow_green')
+        'sampledata/models/arrowlong.sfa',
+        'src/main/res/raw/arrowlong')

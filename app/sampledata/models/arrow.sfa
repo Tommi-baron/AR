@@ -1,16 +1,16 @@
 {
   materials: [
     {
-      name: 'arrow_material',
+      name: 'Standard',
       parameters: [
         {
-          baseColor: null
+          baseColor: null,
         },
         {
           baseColorTint: [
+            0.13725499999999999,
             1,
-            1,
-            1,
+            0,
             1,
           ],
         },
@@ -37,6 +37,7 @@
     file: 'sampledata/models/arrow.obj',
     name: 'arrow',
     recenter: 'root',
+    scale:'0.3'
   },
   version: '0.52:1',
 }

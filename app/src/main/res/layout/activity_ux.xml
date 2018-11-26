@@ -20,39 +20,66 @@
     android:fitsSystemWindows="true"
     tools:context=".HelloSceneformActivity">
 
-  <fragment android:name="com.google.ar.sceneform.ux.ArFragment"
-      android:id="@+id/ux_fragment"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent" />
+    <fragment
+        android:id="@+id/ux_fragment"
+        android:name="com.google.ar.sceneform.samples.hellosceneform.ArFragmentEx"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-  <Button
-      android:id="@+id/test_btn"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Touch Event"/>
-
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:orientation="horizontal">
-
-    <EditText
-        android:id="@+id/x_edit"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:text="0"
-        android:layout_weight="1"/>
+        android:layout_margin="5dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/y_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:text="0"
-        android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
 
-  </LinearLayout>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="X : " />
+
+            <TextView
+                android:id="@+id/x_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:inputType="number"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="number"
+                android:text="Y : " />
+
+            <TextView
+                android:id="@+id/y_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:gravity="left"
+                android:inputType="number"
+                android:text="0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/distance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:inputType="number"
+            android:text="0" />
+    </LinearLayout>
+
 
 </RelativeLayout>
